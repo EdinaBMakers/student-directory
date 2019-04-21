@@ -1,30 +1,37 @@
 VALID_COHORTS = [:january, :february, :march, :april, :may, :june, :july, :august, :september, :october, :november, :december]
 DEFAULT_COHORT = :september
+@students = [] # an empty array accessible to all methods
 
 def interactive_menu
-  students = []
   loop do
-    # 1. print the menu and ask the use what to do
-    puts "1. Input the students"
-    puts "2. Show the students"
-    puts "9. Exit"
-    # 2. read the input and save it into a variable
-    selection = gets.chomp
-    # 3. do what the user has asked
-    case selection
-      when "1"
-        students = input_students
-      when "2"
-        print_header
-        print(students)
-        print_footer(students)
-      when "9"
-        exit # this will cause the program to terminate
-      else
-        puts "I don't know what you meant, try again"
-    end
-    # 4. repeat from step 1
+    print_menu
+    process(gets.chomp)
  end
+end
+
+def print_menu
+  puts "1. Input the students"
+  puts "2. Show the students"
+  puts "9. Exit"
+end
+
+def process(selection)
+  case selection
+    when "1"
+      input_students
+    when "2"
+      show_students
+    when "9"
+      exit # this will cause the program to terminate
+    else
+      puts "I don't know what you meant, try again"
+  end
+end
+
+def show_students
+  print_header
+  print_students_list
+  print_footer
 end
 
 def get_name
@@ -66,8 +73,6 @@ def yes_no_question?(question)
 end
 
 def input_students
-  # create an empty array
-  students = []
 
   begin
     name = get_name
@@ -76,7 +81,7 @@ def input_students
     height = get_height
     hobby = get_hobby
     # add the student hash to the array
-    students << {
+    @students << {
       name: name,
       cohort: cohort,
       country_of_birth: country_of_birth,
@@ -84,12 +89,10 @@ def input_students
       hobby: hobby
     }
 
-    puts "Now we have #{students.count} student#{"s" if students.count > 1}"
+    puts "Now we have #{@students.count} student#{"s" if @students.count > 1}"
 
     # check if user wants to add another student
   end while yes_no_question?("Would you like to add another student? Press 'Y' or 'N'")
-  # return the array of students
-  students
 end
 
 def print_header
@@ -97,10 +100,10 @@ def print_header
   puts "-------------"
 end
 
-def get_column_widths(students)
+def get_column_widths
   column_widths = {name: "Header".size, cohort: "Cohort".size, country_of_birth: "CoB".size, height: "Height".size, hobby: "Hobby".size}
 
-  students.each do |student|
+  @students.each do |student|
     column_widths[:name] = [column_widths[:name], student[:name].size].max
     column_widths[:cohort] = [column_widths[:cohort], student[:cohort].size].max
     column_widths[:country_of_birth] = [column_widths[:country_of_birth], student[:country_of_birth].size].max
@@ -111,25 +114,8 @@ def get_column_widths(students)
   column_widths
 end
 
-def print_by_cohort(students)
-  return if students.empty?
-
-  students_by_cohort = Hash.new{|hash, key| hash[key] = []}
-
-  students.each do |student|
-    students_by_cohort[student[:cohort]].push(student)
-  end
-
-  students_by_cohort.each do |cohort, students|
-    puts "Students of the #{cohort} cohort"
-    puts
-    print(students)
-    puts
-  end
-end
-
-def print(students)
-  column_widths = get_column_widths(students)
+def print_students_list
+  column_widths = get_column_widths
   name_width = column_widths[:name]
   cohort_width = column_widths[:cohort]
   cob_width = column_widths[:country_of_birth]
@@ -150,7 +136,7 @@ def print(students)
   "#{"-" * height_width} | " + \
   "#{"-" * hobby_width}"
 
-  students.each do |student|
+  @students.each do |student|
     puts \
     "#{student[:name].center(name_width)} | " + \
     "#{student[:cohort].to_s.center(cohort_width)} | " + \
@@ -160,14 +146,8 @@ def print(students)
   end
 end
 
-def print_footer(students)
-  puts "Overall, we have #{students.count} great student#{"s" if students.count > 1}"
+def print_footer
+  puts "Overall, we have #{@students.count} great student#{"s" if @students.count > 1}"
 end
-# nothing happens until we call the methods
-# students = input_students
-# print_header
-# puts
-# print(students)
-# puts
-# print_footer(students)
+
 interactive_menu
