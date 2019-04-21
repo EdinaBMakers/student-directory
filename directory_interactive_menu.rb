@@ -13,6 +13,7 @@ def print_menu
   puts "1. Input the students"
   puts "2. Show the students"
   puts "3. Save the list to students.csv"
+  puts "4. Load the list from students.csv"
   puts "9. Exit"
 end
 
@@ -24,6 +25,8 @@ def process(selection)
       show_students
     when "3"
       save_students
+    when "4"
+      load_students
     when "9"
       exit # this will cause the program to terminate
     else
@@ -50,7 +53,22 @@ def save_students
       student[:hobby]
   ]
   csv_line = student_data.join(",")
-  file.puts student_data
+  file.puts csv_line
+  end
+  file.close
+end
+
+def load_students
+  file = File.open("students.csv", "r")
+  file.readlines.each do |line|
+    name, cohort, country_of_birth, height, hobby = line.chomp.split(",")
+    @students << {
+      name: name,
+      cohort: cohort.to_sym,
+      country_of_birth: country_of_birth,
+      height: height,
+      hobby: hobby
+    }
   end
   file.close
 end
@@ -119,6 +137,7 @@ end
 def print_header
   puts "The students of Villains Academy"
   puts "-------------"
+  puts
 end
 
 def get_column_widths
@@ -168,6 +187,7 @@ def print_students_list
 end
 
 def print_footer
+  puts
   puts "Overall, we have #{@students.count} great student#{"s" if @students.count > 1}"
 end
 
