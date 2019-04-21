@@ -1,24 +1,61 @@
-# Research how the method center() of the String class works.
-# Use it in your code to make the output beautifully aligned.
+# In the input_students method the cohort value is hard-coded.
+# How can you ask for both the name and the cohort?
+# What if one of the values is empty?
+# Can you supply a default value?
+# The input will be given to you as a string?
+# How will you convert it to a symbol?
+# What if the user makes a typo?
+VALID_COHORTS = [:january, :february, :march, :april, :may, :june, :july, :august, :september, :october, :november, :december]
+DEFAULT_COHORT = :september
+
+def get_name
+  # get student's information
+  puts "Please enter the student's name"
+  gets.chomp
+end
+
+def get_cohort
+  puts "Please enter the student's cohort"
+  cohort = gets.chomp.to_sym
+  cohort = DEFAULT_COHORT unless VALID_COHORTS.include?(cohort)
+end
+
+def get_country_of_birth
+  puts "Please enter the student's country of birth"
+  gets.chomp
+end
+
+def get_height
+  puts "Please enter the student's height"
+  gets.chomp
+end
+
+def get_hobby
+  puts "Please enter the student's hobby"
+  gets.chomp
+end
+
+def continue?
+  continue = ""
+  until /^[yn]$/.match(continue) do
+    puts "Would you like to add another student? Press 'Y' or 'N'"
+    continue = gets.chomp.downcase
+  end
+
+  continue == "y"
+end
 
 def input_students
   # create an empty array
   students = []
-  # get the first name
   should_continue = true
   # while should_continue == true, repeat this code
   while should_continue do
-    # get student's information
-    puts "Please enter the student's name"
-    name = gets.chomp
-    puts "Please enter the student's cohort"
-    cohort = gets.chomp
-    puts "Please enter the student's country of birth"
-    country_of_birth = gets.chomp
-    puts "Please enter the student's height"
-    height = gets.chomp
-    puts "Please enter the student's hobby"
-    hobby = gets.chomp
+    name = get_name
+    cohort = get_cohort
+    country_of_birth = get_country_of_birth
+    height = get_height
+    hobby = get_hobby
     # add the student hash to the array
     students << {
       name: name,
@@ -29,14 +66,8 @@ def input_students
     }
     puts "Now we have #{students.count} students"
 
-    continue = ""
-    until /^[yn]$/.match(continue) do
-      # check if user wants to add another student
-      puts "Would you like to add another student? Press 'Y' or 'N'"
-      continue = gets.chomp.downcase
-    end
-
-    should_continue = false if continue == "n"
+    # check if user wants to add another student
+    should_continue = continue?
   end
   # return the array of students
   students
@@ -86,7 +117,7 @@ def print(students)
   students.each do |student|
     puts \
     "#{student[:name].center(name_width)} | " + \
-    "#{student[:cohort].center(cohort_width)} | " + \
+    "#{student[:cohort].to_s.center(cohort_width)} | " + \
     "#{student[:country_of_birth].center(cob_width)} | " + \
     "#{student[:height].center(height_width)} | " + \
     "#{student[:hobby].center(hobby_width)}"
