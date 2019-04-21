@@ -1,10 +1,9 @@
-# In the input_students method the cohort value is hard-coded.
-# How can you ask for both the name and the cohort?
-# What if one of the values is empty?
-# Can you supply a default value?
-# The input will be given to you as a string?
-# How will you convert it to a symbol?
-# What if the user makes a typo?
+# Language: Ruby, Level: Level 3
+# Once you complete the previous exercise,
+# change the way the users are displayed: print them grouped by cohorts.
+# To do this, you'll need to get a list of all existing cohorts
+# (the map() method may be useful but it's not the only option),
+# iterate over it and only print the students from that cohort.
 VALID_COHORTS = [:january, :february, :march, :april, :may, :june, :july, :august, :september, :october, :november, :december]
 DEFAULT_COHORT = :september
 
@@ -93,6 +92,20 @@ def get_column_widths(students)
   column_widths
 end
 
+def print_by_cohort(students)
+  students_by_cohort = Hash.new{|hash, key| hash[key] = []}
+  students.each do |student|
+    students_by_cohort[student[:cohort]].push(student)
+  end
+
+  students_by_cohort.each do |cohort, students|
+    puts "Students of the #{cohort} cohort"
+    puts
+    print(students)
+    puts
+  end
+end
+
 def print(students)
   column_widths = get_column_widths(students)
   name_width = column_widths[:name]
@@ -132,6 +145,6 @@ end
 students = input_students
 print_header
 puts
-print(students)
+print_by_cohort(students)
 puts
 print_footer(students)
