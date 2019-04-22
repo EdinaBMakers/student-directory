@@ -81,18 +81,22 @@ def input_students
     height = get_height
     hobby = get_hobby
     # add the student hash to the array
-    @students << {
-      name: name,
-      cohort: cohort,
-      country_of_birth: country_of_birth,
-      height: height,
-      hobby: hobby
-    }
+    add_student(name, cohort, country_of_birth, height, hobby)
 
     puts "Now we have #{@students.count} student#{"s" if @students.count > 1}"
 
     # check if user wants to add another student
   end while yes_no_question?("Would you like to add another student? Press 'Y' or 'N'")
+end
+
+def add_student(name, cohort, cob, height, hobby)
+  @students << {
+    name: name,
+    cohort: cohort,
+    country_of_birth: cob,
+    height: height,
+    hobby: hobby
+  }
 end
 
 def show_students
@@ -180,13 +184,7 @@ def load_students(filename = "students.csv")
   file = File.open(filename, "r")
   file.readlines.each do |line|
     name, cohort, country_of_birth, height, hobby = line.chomp.split(",")
-    @students << {
-      name: name,
-      cohort: cohort.to_sym,
-      country_of_birth: country_of_birth,
-      height: height,
-      hobby: hobby
-    }
+    add_student(name, cohort.to_sym, country_of_birth, height, hobby)
   end
   file.close
 end
