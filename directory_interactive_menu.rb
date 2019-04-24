@@ -1,13 +1,16 @@
 VALID_COHORTS = [:january, :february, :march, :april, :may, :june, :july, :august, :september, :october, :november, :december]
 DEFAULT_COHORT = :september
+DEFAULT_FILE_NAME = "students.csv"
 @students = [] # an empty array accessible to all methods
 
 def print_menu
+  puts
   puts "1. Input the students"
   puts "2. Show the students"
-  puts "3. Save the list to students.csv"
-  puts "4. Load the list from students.csv"
+  puts "3. Save the list to file"
+  puts "4. Load the list from file"
   puts "9. Exit"
+  puts
 end
 
 def interactive_menu
@@ -162,9 +165,9 @@ def print_footer
   puts "Overall, we have #{@students.count} great student#{"s" if @students.count > 1}"
 end
 
-def save_students
+def save_students(filename = DEFAULT_FILE_NAME)
   # open the file for writing
-  file = File.open("students.csv", "w")
+  file = File.open(filename, "w")
   # iterate over the array of students
   @students.each do |student|
     student_data = [
@@ -178,15 +181,17 @@ def save_students
   file.puts csv_line
   end
   file.close
+  puts "Students information sucessfully saved to #{filename}"
 end
 
-def load_students(filename = "students.csv")
+def load_students(filename = DEFAULT_FILE_NAME)
   file = File.open(filename, "r")
   file.readlines.each do |line|
     name, cohort, country_of_birth, height, hobby = line.chomp.split(",")
     add_student(name, cohort.to_sym, country_of_birth, height, hobby)
   end
   file.close
+  puts "Students information succesfully loaded from #{filename}"
 end
 
 def try_load_students
