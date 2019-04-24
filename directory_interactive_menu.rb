@@ -27,9 +27,13 @@ def process(selection)
     when "2"
       show_students
     when "3"
-      save_students
+      puts "Which file would you like to save to?"
+      file = STDIN.gets.chomp
+      save_students(file)
     when "4"
-      load_students
+      puts "Which file would you like to load from?"
+      file = STDIN.gets.chomp
+      load_students(file)
     when "9"
       exit # this will cause the program to terminate
     else
@@ -38,7 +42,6 @@ def process(selection)
 end
 
 def get_name
-  # get student's information
   puts "Please enter the student's name"
   STDIN.gets.chomp
 end
@@ -83,7 +86,7 @@ def input_students
     country_of_birth = get_country_of_birth
     height = get_height
     hobby = get_hobby
-    # add the student hash to the array
+    
     add_student(name, cohort, country_of_birth, height, hobby)
 
     puts "Now we have #{@students.count} student#{"s" if @students.count > 1}"
