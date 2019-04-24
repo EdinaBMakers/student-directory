@@ -86,7 +86,7 @@ def input_students
     country_of_birth = get_country_of_birth
     height = get_height
     hobby = get_hobby
-    
+
     add_student(name, cohort, country_of_birth, height, hobby)
 
     puts "Now we have #{@students.count} student#{"s" if @students.count > 1}"
@@ -170,30 +170,30 @@ end
 
 def save_students(filename = DEFAULT_FILE_NAME)
   # open the file for writing
-  file = File.open(filename, "w")
+  File.open(filename, "w") do |file|
   # iterate over the array of students
-  @students.each do |student|
-    student_data = [
-      student[:name],
-      student[:cohort],
-      student[:country_of_birth],
-      student[:height],
-      student[:hobby]
-  ]
-  csv_line = student_data.join(",")
-  file.puts csv_line
+    @students.each do |student|
+      student_data = [
+        student[:name],
+        student[:cohort],
+        student[:country_of_birth],
+        student[:height],
+        student[:hobby]
+      ]
+      csv_line = student_data.join(",")
+      file.puts csv_line
+    end
   end
-  file.close
   puts "Students information sucessfully saved to #{filename}"
 end
 
 def load_students(filename = DEFAULT_FILE_NAME)
-  file = File.open(filename, "r")
-  file.readlines.each do |line|
-    name, cohort, country_of_birth, height, hobby = line.chomp.split(",")
-    add_student(name, cohort.to_sym, country_of_birth, height, hobby)
+  File.open(filename, "r") do |file|
+    file.readlines.each do |line|
+      name, cohort, country_of_birth, height, hobby = line.chomp.split(",")
+      add_student(name, cohort.to_sym, country_of_birth, height, hobby)
+    end
   end
-  file.close
   puts "Students information succesfully loaded from #{filename}"
 end
 
