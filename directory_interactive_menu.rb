@@ -1,3 +1,5 @@
+require 'csv'
+
 VALID_COHORTS = [:january, :february, :march, :april, :may, :june, :july, :august, :september, :october, :november, :december]
 DEFAULT_COHORT = :september
 DEFAULT_FILE_NAME = "students.csv"
@@ -170,29 +172,25 @@ end
 
 def save_students(filename = DEFAULT_FILE_NAME)
   # open the file for writing
-  File.open(filename, "w") do |file|
+  CSV.open(filename, "w") do |csv|
   # iterate over the array of students
     @students.each do |student|
-      student_data = [
+      csv << [
         student[:name],
         student[:cohort],
         student[:country_of_birth],
         student[:height],
         student[:hobby]
       ]
-      csv_line = student_data.join(",")
-      file.puts csv_line
     end
   end
   puts "Students information sucessfully saved to #{filename}"
 end
 
 def load_students(filename = DEFAULT_FILE_NAME)
-  File.open(filename, "r") do |file|
-    file.readlines.each do |line|
-      name, cohort, country_of_birth, height, hobby = line.chomp.split(",")
-      add_student(name, cohort.to_sym, country_of_birth, height, hobby)
-    end
+  CSV.foreach(filename) do |student_data|
+    name, cohort, country_of_birth, height, hobby = student_data
+    add_student(name, cohort.to_sym, country_of_birth, height, hobby)
   end
   puts "Students information succesfully loaded from #{filename}"
 end
